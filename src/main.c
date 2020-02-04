@@ -20,15 +20,14 @@ int main(int argc, char *argv[]) {
    //struct dirent *e = NULL;
    //int yupi = 0;
    //char *t = NULL;
-	if(argv[0]){
-    if(argc == 1)
-   		mx_standart_ls();
-   }
+	if (argv[0]) {
+        if (argc == 1)
+   	        mx_standart_ls();
+    }
    	return 0;
-   }
-    /*if(ls + cat)
+}
+    /*if (ls + cat)
     	mx_ks_cat()
-
 //fd = open(argv[0], O_RDONLY)
 //  write(1,argv[0],mx_strlen(argv[0]))
   
@@ -71,5 +70,3 @@ int main(int argc, char *argv[]) {
    //system("leaks n -q");
    return 0;
 }*/
-
- 

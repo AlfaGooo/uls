@@ -3,27 +3,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+
 char *mx_strnew(const int size);
 int mx_strlen(const char *s);
-
 void mx_free_array2(char **arr, int row); 
-
 int mx_bubble_sort(char **arr, int size);
-
 static int *make_titi(int c, char **yy);
-
 static void sorting_dop(int y, int c, int *titi, char **yy);
+char *mx_strcat(char *restrict s1, const char *restrict s2);
+void mx_push_back(t_list **list, void *data); 
+int mx_list_size(t_list *list);
 
-char *mx_strcat(char *restrict s1, const char *restrict s2) ;
-
-typedef struct t_list {
+typedef struct s_list {
     void *data;
     struct s_list *next;
 }   t_list;
-
-void mx_push_back(t_list **list, void *data); 
-
-int mx_list_size(t_list *list);
 
 void mx_multi_column_output(int y, DIR *r) {
     struct dirent *e = NULL;
@@ -45,21 +39,20 @@ void mx_multi_column_output(int y, DIR *r) {
         e = readdir(r);
    }
    c = mx_list_size(consis);
-   yy = (char**)malloc (sizeof(char**) * c);
+   yy = (char **)malloc(sizeof(char **) * c);
    temp = consis;
    int a = -1;
-   for(b = 0; b < c; b++){
-        while(consis->next != NULL){
-        if((((struct dirent *)(consis->data))->d_name)[0] != '.'){
+   for (b = 0; b < c; b++) {
+        if ((((struct dirent *)(consis->data))->d_name)[0] != '.') {
             a++;
             yy[a] = mx_strnew(mx_strlen(((struct dirent *)(consis->data))->d_name));
             yy[a] = mx_strcat(yy[a], ((struct dirent *)(consis->data))->d_name);
         }
         consis = consis -> next;
-    }
+
     }   
     c = a + 1 ;
-    yy[c] = NULL; 
+    //yy[c] = NULL; 
     closedir(r);
     mx_bubble_sort(yy, c);
     titi = make_titi(c, yy);
@@ -70,8 +63,8 @@ static int *make_titi(int c, char **yy) {
     int b = 0;
     int *titi = NULL;
 
-    titi = (int*)malloc(sizeof(int*) * c);
-    for (b = 0; yy[b] != NULL; b++)
+    titi = (int *)malloc(sizeof(int *) * c);
+    for (b = 0; b < c; b++)
        titi[b] = mx_strlen(yy[b]);
     return titi;
 }
@@ -85,17 +78,17 @@ static void sorting_dop(int y, int c, int *titi, char **yy) {
     int *len = NULL;
     int col = 0;
 
-    while(rest > y && counter < c) {
+    while (rest > y && counter < c) {
         rest = 0;
         counter++;
         col = -1;
-        if(len)
+        if (len)
             free(len);
         len = (int*)malloc(sizeof(int*) * ((c + 1) / counter));
         for(int a =  0; a < c; a++) {
             col++;
             max = 0;
-            for(int b = a; b < a + counter && b < c; b++)
+            for( b = a; b < a + counter && b < c; b++)
                 if(titi[b] > max)
                     max = titi[b];
             a = b - 1;
@@ -108,12 +101,15 @@ static void sorting_dop(int y, int c, int *titi, char **yy) {
         }
     }        
    
-    for(b = 0; b < counter; b++) {
+    int term;
+    term = isatty(1); 
+
+    for (b = 0; b < counter; b++) {
         int a = 0;
-        for(col = b; col < c; col = col + counter) {
+        for (col = b; col < c; col = col + counter) {
             write(1, yy[col], mx_strlen(yy[col]));
-            if(mx_strlen(yy[col]) < len[a]) 
-                for(rest = 0; rest < len[a] - mx_strlen(yy[col]); rest++)
+            if (mx_strlen(yy[col]) < len[a]) 
+                for (rest = 0; rest < len[a] - mx_strlen(yy[col]); rest++)
                     write(1, " ", 1);
 
             a++;
@@ -123,3 +119,6 @@ static void sorting_dop(int y, int c, int *titi, char **yy) {
     free(titi);
     mx_free_array2(yy, c);
 }
+//clang -std=c11 -Wall -Wextra -Werror -Wpedantic -o n main.c mx_standart_ls.c
+// mx_multi_column_output.c mx_push_back.c mx_list_size.c mx_strlen.c 
+//mx_strnew.c mx_strcat.c mx_bubble_sort.c mx_free_array2.c mx_strcmp.c mx_create_node.c

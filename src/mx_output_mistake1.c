@@ -21,7 +21,7 @@ void mx_output_mistake1(char *n, char *n, DIR *r, int fd) {
        write(2, strerror(2), mx_strlen(strerror(2)));
        write(2, "\n", 1);
        exit(0);
-       }
+    }
 }
 
 static char *loose_slash(char *w) {
